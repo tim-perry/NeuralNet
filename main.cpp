@@ -7,8 +7,6 @@
 #define WIDTH 28
 #define SCALE 20
 
-
-
 using namespace Eigen;
 
 int main() {
@@ -36,15 +34,14 @@ int main() {
 	//network->save("./numnet");
 	
 
-
 	//The code below creates a window that lets the user draw digits, which are fed through the trained network, displaying its output layer activations
 	//Left click to draw. Right click to erase.
 	sf::RenderWindow window(sf::VideoMode(WIDTH * SCALE + 100, WIDTH * SCALE), "Digit Recognizer", sf::Style::Titlebar | sf::Style::Close);
-    sf::Texture texture;
-    texture.create(28, 28);
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    sprite.setScale(sf::Vector2f(SCALE, SCALE));
+	sf::Texture texture;
+	texture.create(28, 28);
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setScale(sf::Vector2f(SCALE, SCALE));
 
 	sf::Font font;
 	font.loadFromFile("/usr/share/fonts/truetype/noto/NotoMono-Regular.ttf");
@@ -52,25 +49,25 @@ int main() {
 	text.setFont(font);
 	text.setCharacterSize(45);
 
-    sf::Uint32* pixels = new sf::Uint32[WIDTH * WIDTH];
+	sf::Uint32* pixels = new sf::Uint32[WIDTH * WIDTH];
 	VectorXd draw = testset.examples.at(1);
-    for (int i = 0; i < WIDTH * WIDTH; i++) {
+	for (int i = 0; i < WIDTH * WIDTH; i++) {
 		uint8_t val = draw[i] * 255;
 		pixels[i] = val | val << 8 | val << 16 | val << 24;
 	}
 
 	Eigen::VectorXd digit(784);
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event))
-            if (event.type == sf::Event::Closed) window.close();
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event))
+			if (event.type == sf::Event::Closed) window.close();
 		
 		//draw to screen
-        sf::Vector2i pos = sf::Mouse::getPosition(window);
+		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		if (pos.x > WIDTH * SCALE || pos.y > WIDTH * SCALE) {}
-        else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) pixels[((pos.y/SCALE) * WIDTH + pos.x/SCALE)] = 0xffffffff;
-        else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) pixels[((pos.y/SCALE) * WIDTH + pos.x/SCALE)] = 0x0;
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) pixels[((pos.y/SCALE) * WIDTH + pos.x/SCALE)] = 0xffffffff;
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) pixels[((pos.y/SCALE) * WIDTH + pos.x/SCALE)] = 0x0;
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 			for (int i = 0; i < WIDTH * WIDTH; i++) pixels[i] = 0x0;
 		}
@@ -85,7 +82,7 @@ int main() {
 
 		window.clear();
 		texture.update((sf::Uint8*)pixels);
-        window.draw(sprite);
+		window.draw(sprite);
 
 		//show digit
 		for (int i = 0; i < 10; i++) {
@@ -96,7 +93,6 @@ int main() {
 			text.setFillColor(sf::Color(color, color, color, 0xff));
 			window.draw(text);
 		}
-
-        window.display();
-    }
+		window.display();
+	}
 }
